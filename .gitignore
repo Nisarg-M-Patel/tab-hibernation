@@ -1,0 +1,41 @@
+# Firefox Extension packaging
+*.zip
+*.xpi
+
+# Temporary test profile directories
+web-ext-artifacts/
+
+# Build output
+dist/
+build/
+
+# Node.js dependencies (if you add any in the future)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Editor and OS specific files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.directory
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+
+# Backup files
+*.bak
+*.backup
+*#

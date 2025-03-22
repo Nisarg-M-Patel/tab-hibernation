@@ -3,6 +3,11 @@
     "name": "Tab Hibernation",
     "version": "1.0.0",
     "description": "Store tabs in an inactive state to save memory",
+    "browser_specific_settings": {
+      "gecko": {
+          "id": "Nisarg-M-Patel@github.com"
+      }
+    },
     "permissions": [
       "tabs",
       "storage",
