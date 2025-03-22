@@ -28,7 +28,7 @@ function hibernateTab(tabId) {
     .then(tab => {
       console.log("Hibernating tab:", tab);
       
-      // Store tab info
+      // Store basic tab info
       inactiveTabs.push({
         url: tab.url,
         title: tab.title,
@@ -36,13 +36,20 @@ function hibernateTab(tabId) {
         timestamp: Date.now()
       });
       
-      // Save first, then close tab
+      // Save and close tab
       return saveInactiveTabs()
-        .then(() => browser.tabs.remove(tab.id))
-        .then(() => ({ success: true }));
+        .then(() => browser.tabs.remove(tabId))
+        .then(() => {
+          console.log("Tab hibernated successfully");
+          return { success: true };
+        })
+        .catch(error => {
+          console.error("Error closing tab:", error);
+          return { success: false, error: error.toString() };
+        });
     })
     .catch(error => {
-      console.error("Error hibernating tab:", error);
+      console.error("Error getting tab:", error);
       return { success: false, error: error.toString() };
     });
 }

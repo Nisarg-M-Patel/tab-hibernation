@@ -1,139 +1,178 @@
 body {
-    width: 350px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    padding: 16px;
-  }
-  
-  h1 {
-    font-size: 18px;
-    margin: 0 0 12px 0;
-  }
-  
-  h2 {
-    font-size: 16px;
-    margin: 16px 0 8px 0;
-  }
-  
-  button {
-    background-color: #0060df;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  button:hover {
-    background-color: #0250bb;
-  }
-  
-  .divider {
-    height: 1px;
-    background-color: #e0e0e6;
-    margin: 16px 0;
-  }
-  
-  .inactive-tab {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    background-color: #f9f9fa;
-    border: 1px solid #e0e0e6;
-  }
-  
-  .tab-favicon {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-  }
-  
-  .tab-title {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 14px;
-  }
-  
-  .tab-actions {
-    display: flex;
-    gap: 4px;
-  }
-  
-  .tab-actions button {
-    background-color: transparent;
-    color: #0060df;
-    padding: 4px;
-    width: auto;
-  }
-  
-  .tab-actions button:hover {
-    background-color: #e7f1fd;
-  }
-  
-  .loading {
-    color: #737373;
-    font-style: italic;
-    padding: 8px 0;
-  }
-  
-  /* Custom confirmation dialog */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-container {
-    background-color: white;
-    padding: 16px;
-    border-radius: 8px;
-    width: 80%;
-    max-width: 300px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modal-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 12px 0;
-  }
-  
-  .modal-message {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-  
-  .modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-  
-  .modal-buttons button {
-    width: auto;
-  }
-  
-  .btn-cancel {
-    background-color: #f0f0f4;
-    color: #0c0c0d;
-  }
-  
-  .btn-cancel:hover {
-    background-color: #e0e0e6;
-  }
+  width: 350px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 16px;
+}
+
+h1 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 16px 0 8px 0;
+}
+
+button {
+  background-color: #0060df;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #0250bb;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e6;
+  margin: 16px 0;
+}
+
+.inactive-tab {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background-color: #f9f9fa;
+  border: 1px solid #e0e0e6;
+}
+
+.tab-favicon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.tab-info-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.tab-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.tab-session-info {
+  font-size: 11px;
+  color: #737373;
+  margin: 4px 0 4px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tab-session-info span {
+  background-color: #f0f0f4;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.tab-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.tab-actions button {
+  background-color: transparent;
+  color: #0060df;
+  padding: 4px;
+  width: auto;
+  flex: 1;
+}
+
+.tab-actions button:hover {
+  background-color: #e7f1fd;
+}
+
+.loading {
+  color: #737373;
+  font-style: italic;
+  padding: 8px 0;
+}
+
+.empty-state {
+  color: #737373;
+  font-style: italic;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.error {
+  color: #d70022;
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* Custom confirmation dialog */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 300px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.modal-message {
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-buttons button {
+  width: auto;
+}
+
+.btn-cancel {
+  background-color: #f0f0f4;
+  color: #0c0c0d;
+}
+
+.btn-cancel:hover {
+  background-color: #e0e0e6;
+}
