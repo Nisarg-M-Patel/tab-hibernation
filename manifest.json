@@ -5,7 +5,8 @@
     "description": "Store tabs in an inactive state to save memory",
     "permissions": [
       "tabs",
-      "storage"
+      "storage",
+      "contextMenus"
     ],
     "background": {
       "scripts": ["background.js"]

@@ -22,6 +22,86 @@ function saveInactiveTabs() {
     });
 }
 
+// Create a function to hibernate a specific tab
+function hibernateTab(tabId) {
+  return browser.tabs.get(tabId)
+    .then(tab => {
+      console.log("Hibernating tab:", tab);
+      
+      // Store tab info
+      inactiveTabs.push({
+        url: tab.url,
+        title: tab.title,
+        favIconUrl: tab.favIconUrl || '',
+        timestamp: Date.now()
+      });
+      
+      // Save first, then close tab
+      return saveInactiveTabs()
+        .then(() => browser.tabs.remove(tab.id))
+        .then(() => ({ success: true }));
+    })
+    .catch(error => {
+      console.error("Error hibernating tab:", error);
+      return { success: false, error: error.toString() };
+    });
+}
+
+// Create a function to hibernate the current tab
+function hibernateCurrentTab() {
+  return browser.tabs.query({ active: true, currentWindow: true })
+    .then(tabs => {
+      if (tabs.length > 0) {
+        return hibernateTab(tabs[0].id);
+      }
+      return { success: false, error: "No active tab found" };
+    })
+    .catch(error => {
+      console.error("Error getting current tab:", error);
+      return { success: false, error: error.toString() };
+    });
+}
+
+// Create right-click context menu items
+browser.contextMenus.create({
+  id: "hibernate-tab",
+  title: "Hibernate this tab",
+  contexts: ["tab"]
+});
+
+browser.contextMenus.create({
+  id: "hibernate-link",
+  title: "Hibernate link",
+  contexts: ["link"]
+});
+
+// Listen for context menu clicks
+browser.contextMenus.onClicked.addListener((info, tab) => {
+  console.log("Context menu clicked:", info, tab);
+  
+  if (info.menuItemId === "hibernate-tab") {
+    // Hibernate the tab that was right-clicked
+    hibernateTab(tab.id);
+  } 
+  else if (info.menuItemId === "hibernate-link") {
+    // Store the link in inactive tabs and don't navigate to it
+    inactiveTabs.push({
+      url: info.linkUrl,
+      title: info.linkText || info.linkUrl,
+      favIconUrl: tab.favIconUrl || '',
+      timestamp: Date.now()
+    });
+    
+    saveInactiveTabs()
+      .then(() => {
+        console.log("Link hibernated successfully:", info.linkUrl);
+      })
+      .catch(error => {
+        console.error("Error hibernating link:", error);
+      });
+  }
+});
+
 // Listen for messages from popup
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Received message:", message);
@@ -34,31 +114,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   
   // Add current tab to inactive tabs
   else if (message.action === "addTabToInactive") {
-    return browser.tabs.query({ active: true, currentWindow: true })
-      .then(tabs => {
-        if (tabs.length > 0) {
-          const tab = tabs[0];
-          console.log("Adding tab to inactive:", tab);
-          
-          // Store tab info
-          inactiveTabs.push({
-            url: tab.url,
-            title: tab.title,
-            favIconUrl: tab.favIconUrl || '',
-            timestamp: Date.now()
-          });
-          
-          // Save first, then close tab
-          return saveInactiveTabs()
-            .then(() => browser.tabs.remove(tab.id))
-            .then(() => ({ success: true }));
-        }
-        return { success: false, error: "No active tab found" };
-      })
-      .catch(error => {
-        console.error("Error adding tab to inactive:", error);
-        return { success: false, error: error.toString() };
-      });
+    return hibernateCurrentTab();
   }
   
   // Restore tab from inactive list
