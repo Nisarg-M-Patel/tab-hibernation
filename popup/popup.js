@@ -3,6 +3,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const inactiveTabsList = document.getElementById('inactive-tabs-list');
     const storeTabButton = document.getElementById('store-tab');
     
+    // Custom confirm dialog elements
+    const confirmDialog = document.getElementById('confirm-dialog');
+    const confirmMessage = document.getElementById('confirm-message');
+    const confirmOkButton = document.getElementById('confirm-ok');
+    const confirmCancelButton = document.getElementById('confirm-cancel');
+    
+    // Custom confirm dialog function
+    function customConfirm(message, callback) {
+      // Set message
+      confirmMessage.textContent = message;
+      
+      // Show dialog
+      confirmDialog.style.display = 'flex';
+      
+      // Handle OK button
+      const handleOk = () => {
+        confirmOkButton.removeEventListener('click', handleOk);
+        confirmCancelButton.removeEventListener('click', handleCancel);
+        confirmDialog.style.display = 'none';
+        callback(true);
+      };
+      
+      // Handle Cancel button
+      const handleCancel = () => {
+        confirmOkButton.removeEventListener('click', handleOk);
+        confirmCancelButton.removeEventListener('click', handleCancel);
+        confirmDialog.style.display = 'none';
+        callback(false);
+      };
+      
+      // Add event listeners
+      confirmOkButton.addEventListener('click', handleOk);
+      confirmCancelButton.addEventListener('click', handleCancel);
+    }
+    
     // Load inactive tabs
     loadInactiveTabs();
     
@@ -78,18 +113,22 @@ document.addEventListener('DOMContentLoaded', () => {
             removeButton.textContent = 'Remove';
             removeButton.addEventListener('click', (event) => {
               event.preventDefault();
-              if (confirm('Are you sure you want to remove this tab?')) {
-                browser.runtime.sendMessage({ 
-                  action: "removeInactiveTab", 
-                  index: index 
-                })
-                .then(() => {
-                  loadInactiveTabs();
-                })
-                .catch(error => {
-                  console.error("Error removing tab:", error);
-                });
-              }
+              
+              // Use custom confirm dialog instead of browser confirm
+              customConfirm('Are you sure you want to remove this tab?', (confirmed) => {
+                if (confirmed) {
+                  browser.runtime.sendMessage({ 
+                    action: "removeInactiveTab", 
+                    index: index 
+                  })
+                  .then(() => {
+                    loadInactiveTabs();
+                  })
+                  .catch(error => {
+                    console.error("Error removing tab:", error);
+                  });
+                }
+              });
             });
             
             // Add all elements to the tab item
