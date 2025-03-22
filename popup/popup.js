@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create favicon
             const favicon = document.createElement('img');
             favicon.className = 'tab-favicon';
-            favicon.src = tab.favIconUrl || 'default-favicon.png';
-            favicon.onerror = () => { favicon.src = 'default-favicon.png'; };
+            favicon.src = tab.favIconUrl || '../icons/default-favicon.png';
+            favicon.onerror = () => { favicon.src = '../icons/default-favicon.png'; };
             
             // Create title
             const title = document.createElement('div');
