@@ -1,0 +1,86 @@
+body {
+    width: 350px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    padding: 16px;
+  }
+  
+  h1 {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+  }
+  
+  h2 {
+    font-size: 16px;
+    margin: 16px 0 8px 0;
+  }
+  
+  button {
+    background-color: #0060df;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #0250bb;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: #e0e0e6;
+    margin: 16px 0;
+  }
+  
+  .inactive-tab {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background-color: #f9f9fa;
+    border: 1px solid #e0e0e6;
+  }
+  
+  .tab-favicon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+  
+  .tab-title {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+  }
+  
+  .tab-actions {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .tab-actions button {
+    background-color: transparent;
+    color: #0060df;
+    padding: 4px;
+    width: auto;
+  }
+  
+  .tab-actions button:hover {
+    background-color: #e7f1fd;
+  }
+  
+  .loading {
+    color: #737373;
+    font-style: italic;
+    padding: 8px 0;
+  }
