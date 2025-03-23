@@ -1,26 +1,92 @@
-// Store for inactive tabs
-let inactiveTabs = [];
+// Set up the database
+let db;
+const dbName = "tabHibernationDB";
+const dbVersion = 1;
+const storeName = "inactiveTabs";
+let inactiveTabs = []; // In-memory cache of tabs
 
-// Initialize: Load saved inactive tabs
-browser.storage.local.get('inactiveTabs').then(result => {
-  if (result.inactiveTabs) {
-    inactiveTabs = result.inactiveTabs;
-    console.log("Loaded from storage:", inactiveTabs);
-  }
-}).catch(error => {
-  console.error("Error loading from storage:", error);
-});
-
-// Save inactive tabs to storage
-function saveInactiveTabs() {
-  return browser.storage.local.set({ inactiveTabs })
-    .then(() => {
-      console.log("Saved to storage:", inactiveTabs);
-    })
-    .catch(error => {
-      console.error("Error saving to storage:", error);
-    });
+// Initialize the database
+function initDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName, dbVersion);
+    
+    request.onerror = event => {
+      console.error("Database error:", event.target.error);
+      reject(event.target.error);
+    };
+    
+    request.onsuccess = event => {
+      db = event.target.result;
+      console.log("Database opened successfully");
+      resolve(db);
+    };
+    
+    request.onupgradeneeded = event => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(storeName)) {
+        const store = db.createObjectStore(storeName, { keyPath: "timestamp" });
+        // Add index for faster URL-based lookups
+        store.createIndex("url", "url", { unique: false });
+        console.log("Object store created with url index");
+      }
+    };
+  });
 }
+
+// Save tabs to IndexedDB
+function saveInactiveTabs() {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], "readwrite");
+    const store = transaction.objectStore(storeName);
+    
+    // Clear existing data
+    const clearRequest = store.clear();
+    
+    clearRequest.onsuccess = () => {
+      // Add each tab
+      inactiveTabs.forEach(tab => {
+        store.add(tab);
+      });
+      
+      transaction.oncomplete = () => {
+        console.log("Saved to IndexedDB:", inactiveTabs);
+        resolve();
+      };
+      
+      transaction.onerror = event => {
+        console.error("Transaction error:", event.target.error);
+        reject(event.target.error);
+      };
+    };
+  });
+}
+
+// Load tabs from IndexedDB
+function loadInactiveTabs() {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], "readonly");
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+    
+    request.onsuccess = () => {
+      inactiveTabs = request.result;
+      console.log("Loaded from IndexedDB:", inactiveTabs);
+      resolve(inactiveTabs);
+    };
+    
+    request.onerror = event => {
+      console.error("Get error:", event.target.error);
+      reject(event.target.error);
+    };
+  });
+}
+
+// Initialize database and load tabs
+initDatabase()
+  .then(() => loadInactiveTabs())
+  .catch(error => {
+    console.error("Error initializing database:", error);
+  });
 
 // Create a function to hibernate a specific tab
 function hibernateTab(tabId) {
@@ -115,8 +181,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   
   // Get all inactive tabs
   if (message.action === "getInactiveTabs") {
-    console.log("Returning inactive tabs:", inactiveTabs);
-    return Promise.resolve(inactiveTabs);
+    return loadInactiveTabs();
   }
   
   // Add current tab to inactive tabs
